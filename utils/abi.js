@@ -52,9 +52,9 @@ export const abi = [
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "contractAddress",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "contractId",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,

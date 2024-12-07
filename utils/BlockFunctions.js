@@ -46,7 +46,6 @@ export const BlockFunctions = {
         try {
             const uri = await BlockFunctions.storage?.upload(
                 {
-                    contractId,
                     descreption,
                     time: Date.now(),
                     files

@@ -121,7 +121,7 @@ contract DERS is ISeverityChecker {
     );
     event AlertResolved(
         uint256 id,
-        address contractAddress,
+        uint256 contractId,
         AlertStatus status
     );
     event ValidatorRegistered(uint256 id, address validator);
@@ -415,11 +415,13 @@ contract DERS is ISeverityChecker {
     function validateAlert(Alert storage _alert, uint256 _alertId) internal {
         removeAlertFromArrays(_alertId, _alert.contractId);
         _alert.status = AlertStatus.ValidatedUnResolved;
+        emit AlertResolved(_alertId,_alert.contractId, _alert.status);
     }
 
     function rejectAlert(Alert storage _alert, uint256 _alertId) internal {
         removeAlertFromArrays(_alertId, _alert.contractId);
         _alert.status = AlertStatus.Rejected;
+        emit AlertResolved(_alertId,_alert.contractId, _alert.status);
     }
 
     function declareAlertResult(uint256 _alertId, bool _accept) external {

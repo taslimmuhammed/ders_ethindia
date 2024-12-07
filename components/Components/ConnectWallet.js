@@ -27,8 +27,6 @@ const ConnectWallet = () => {
     const [error, setError] = useState('');
     const [showDialog, setShowDialog] = useState(false);
 
-    
-
     const connectWallet = async () => {
         setIsLoading(true);
         try {

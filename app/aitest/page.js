@@ -10,7 +10,7 @@ import { testSmartContractAddress } from '@/utils/config';
 import { testABI } from '@/utils/testAbi';
 import { EthersContext } from '@/context/EthersContext';
 
-export default function DepositComponent({ contract }) {
+export default function DepositComponent() {
     const [amount, setAmount] = useState('');
     const { setIsLoading } = useContext(EthersContext);
 
