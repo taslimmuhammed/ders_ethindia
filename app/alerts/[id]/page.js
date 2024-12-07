@@ -38,14 +38,12 @@ const AlertDetails = ({ params }) => {
     const intiator = async()=>{
         setIsLoading(true)
         let data = await BlockFunctions.getAlertData(id, wallet);
-        console.log({data});
         if(data) setAlertData(data)
         setIsLoading(false)
     }
     useEffect(() => {
         intiator()
         console.log({wallet});
-        
     }, [wallet])
     
     const validateStake = (amount) => {

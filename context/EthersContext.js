@@ -225,6 +225,7 @@ export default function Ethers({ children }) {
     const checkIfWalletIsConnect = async () => {
         try {
             const wallets = await getWallets()
+            console.log(wallets);
             setWallet(wallets.wallets[0].address)
         } catch (error) {
             console.log("Failed to connect wallet:", error);

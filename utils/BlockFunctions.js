@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { ethers } from "ethers";
 import { contractAddress } from "./config";
 import { abi } from "./abi";
+import { useOkto } from "okto-sdk-react";
 
 const AlertStatus = {
     0: 'Pending',
@@ -24,23 +25,12 @@ export const BlockFunctions = {
         clientId: "d38b4842e9d041746be46984e4baab53", // You can get one from dashboard settings
     }),
     getContract: () => {
-        // if (!ethereum) return toast.error('Please connect your wallet');
-        // const provider = new ethers.providers.Web3Provider(ethereum);
-        // const signer = provider.getSigner();
-        // const contract = new ethers.Contract(contractAddress, abi, signer);
+        const provider = new ethers.providers.JsonRpcProvider('https://polygon-amoy.g.alchemy.com/v2/QEgC4Vsyb3fgPm90ENKlwx5X1-edSRT8');
+        const contract = new ethers.Contract(contractAddress, abi, provider);
         return contract;
     },
-    getWallet : async () => {
-        try {
-            const accounts = await ethereum.request({ method: "eth_accounts" });
-            const account = accounts[0];
-            return account;
-        } catch (e) {
-            toast.error("please connect your wallet")
-        }
-    },
-    getMetaMaskError:(error)=>{
-        return ". reason:- "+error?.error?.data?.message || error?.data?.message || error.message || ""
+    getMetaMaskError: (error) => {
+        return ". reason:- " + error?.error?.data?.message || error?.data?.message || error.message || ""
     },
     uploadToIPFS: async (files, descreption) => {
         try {
@@ -56,15 +46,14 @@ export const BlockFunctions = {
             toast.error("error uploading files to IPFS")
         }
     },
-    getAlertIPFSData : async(uri)=>{
+    getAlertIPFSData: async (uri) => {
         try {
             const data = await BlockFunctions.storage.downloadJSON(uri)
             return data
         } catch (error) {
-           toast.error("failed to obtain alert data") 
+            toast.error("failed to obtain alert data")
         }
     },
-    // Get vote details for a specific alert and voter
     getVote: async (alertId, voterAddress) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -81,7 +70,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Get alert status
     getAlertStatus: async (alertId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -93,7 +81,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Get all contracts
     getContracts: async () => {
         try {
             const contract = BlockFunctions.getContract()
@@ -107,8 +94,8 @@ export const BlockFunctions = {
                 severity: BigNoToInt(contract[5]),
                 minStake: BigNoToInt(contract[6]),
                 minRank: BigNoToInt(contract[7]),
-                alerts:contract.alerts,
-                resolvedAlerts:contract.resolvedAlerts,
+                alerts: contract.alerts,
+                resolvedAlerts: contract.resolvedAlerts,
             }));
         } catch (error) {
             console.log('Error getting contracts:', error);
@@ -116,11 +103,9 @@ export const BlockFunctions = {
         }
     },
 
-    // Get all unresolved alerts
-    getUnresolvedAlerts: async () => {
+    getUnresolvedAlerts: async (wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const wallet = BlockFunctions.getWallet()
             const alerts = await contract.getUnresolvedAlerts(wallet);
 
             return alerts.map(alert => ({
@@ -132,22 +117,24 @@ export const BlockFunctions = {
                 stake: alert[5],
                 isHighPriority: alert[6],
                 votersCount: alert[7],
-                voted:!alert[8],
-                uri:alert[9]
+                voted: !alert[8],
+                uri: alert[9]
             }));
         } catch (error) {
             console.log('Error getting unresolved alerts:', error);
             toast.error(" Error getting data")
         }
     },
-    getAlertData: async(id)=>{
+
+    getAlertData: async (id, wallet) => {
         try {
+            console.log({id, wallet});
+            
             const contract = BlockFunctions.getContract()
-            const wallet = BlockFunctions.getWallet()
             const alert = await contract.getAlertDetails(id, wallet);
             let ipfsData = await BlockFunctions.storage.downloadJSON(alert.uri);
             let files = []
-            ipfsData.files.map(uri=>files.push({uri,name:getFileNameFromURL(uri)}))
+            ipfsData.files.map(uri => files.push({ uri, name: getFileNameFromURL(uri) }))
             return {
                 id: BigNoToInt(alert[0]),
                 contractId: BigNoToInt(alert[1]),
@@ -168,15 +155,15 @@ export const BlockFunctions = {
             toast.error(" Error getting data")
         }
     },
-    getAlertDataWithoutIPFS: async (id) => {
+
+    getAlertDataWithoutIPFS: async (id, wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const wallet = BlockFunctions.getWallet()
             const alert = await contract.getAlertDetails(id, wallet);
             const timestampMs = parseInt(alert[2]._hex, 16) * 1000
             const now = Date.now()
             const diff = now - timestampMs
-            const resolvable = alert[6]? diff>=300000:diff>=86400000
+            const resolvable = alert[6] ? diff >= 300000 : diff >= 86400000
             return {
                 id: BigNoToInt(alert[0]),
                 contractId: BigNoToInt(alert[1]),
@@ -196,7 +183,7 @@ export const BlockFunctions = {
             toast.error(" Error getting data")
         }
     },
-    // Get contract mapping details
+
     getContractMapping: async (contractId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -216,24 +203,24 @@ export const BlockFunctions = {
             toast.error(" Error getting data")
         }
     },
-    getUserContracts:async()=>{
+
+    getUserContracts: async (wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const wallet = BlockFunctions.getWallet()
             const contracts = await contract.getUserContracts(wallet);
             console.log(contracts);
-            return contracts.map(data=>({
-                id:BigNoToInt(data.contractId),
-                status:ContractStatus[data.status],
-                address:data.contractAddress,
+            return contracts.map(data => ({
+                id: BigNoToInt(data.contractId),
+                status: ContractStatus[data.status],
+                address: data.contractAddress,
                 balance: BigNoToInt(data.balance),
                 reward: BigNoToInt(data.alertReward),
-                severity:data.severity,
+                severity: data.severity,
                 minStake: BigNoToInt(data.minStake),
                 minRank: BigNoToInt(data.minRank),
-                alerts:data.alerts,
-                resolvedAlerts:data.resolvedAlerts,
-                aiPause:data.aiPause
+                alerts: data.alerts,
+                resolvedAlerts: data.resolvedAlerts,
+                aiPause: data.aiPause
             }));
         } catch (error) {
             console.log('Error getting contract mapping:', error);
@@ -241,7 +228,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Get alert mapping details
     getAlertMapping: async (alertId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -265,12 +251,10 @@ export const BlockFunctions = {
         }
     },
 
-    // Get validator mapping details
-    getValidatorDetails: async () => {
+    getValidatorDetails: async (wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const address = BlockFunctions.getWallet();
-            const validator = await contract.validatorMapping(address);
+            const validator = await contract.validatorMapping(wallet);
             let time = BigNoToInt(validator.lastCreationTime) == 0 ? "Never" : BigIntToTimeDiff(validator.lastCreationTime)
             return {
                 id: BigNoToInt(validator.id),
@@ -284,7 +268,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Get alert URI
     getAlertURI: async (alertId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -296,7 +279,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Get resolved URI
     getResolvedURI: async (alertId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -308,7 +290,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Check severity
     checkSeverity: async (contractId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -320,7 +301,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Check if contract is critical
     isCritical: async (contractId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -332,7 +312,6 @@ export const BlockFunctions = {
         }
     },
 
-    // Calculate reward and rank for specific validator and alert
     calculateRewardAndRank: async (validatorAddress, alertId) => {
         try {
             const contract = BlockFunctions.getContract()
@@ -347,14 +326,12 @@ export const BlockFunctions = {
         }
     },
 
-    // Calculate all rewards and ranks for a validator
-    calculateAllRewardAndRank: async () => {
+    calculateAllRewardAndRank: async (wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const address = BlockFunctions.getWallet()
-            const [totalReward, totalRank] = await contract.calculateAllRewardAndRank(address);
+            const [totalReward, totalRank] = await contract.calculateAllRewardAndRank(wallet);
             return {
-                rewards:BigNoToInt(totalReward),
+                rewards: BigNoToInt(totalReward),
                 rank: BigNoToInt(totalRank)
             };
         } catch (error) {
@@ -362,11 +339,11 @@ export const BlockFunctions = {
             toast.error(" Error getting data")
         }
     },
-    getUserUnClaimedList: async () => {
+
+    getUserUnClaimedList: async (wallet) => {
         try {
             const contract = BlockFunctions.getContract()
-            const address = BlockFunctions.getWallet()
-            const list = await contract.getUserUnClaimedList(address);
+            const list = await contract.getUserUnClaimedList(wallet);
             return list;
         } catch (error) {
             console.log('Error calculating all rewards and ranks:', error);
