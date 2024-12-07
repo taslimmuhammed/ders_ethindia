@@ -7,7 +7,8 @@ import { useSession, signIn, signOut } from "next-auth/react";
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
-    const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_OKTO_CLIENT_API || "");
+    const [apiKey, setApiKey] = useState("173e54ec-fe4f-44da-b717-5e30e516596f");
+    
     const [buildType, setBuildType] = useState(BuildType.SANDBOX);
     const { data: session } = useSession();
 

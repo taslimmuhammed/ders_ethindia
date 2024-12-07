@@ -9,19 +9,21 @@ import { BigNoToInt } from '@/utils/convertions';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
+import { useOkto } from 'okto-sdk-react';
 
 const UnresolvedAlerts = () => {
-    const {setIsLoading} = useContext(EthersContext)
+    const {setIsLoading, wallet} = useContext(EthersContext)
     const [alerts, setAlerts] = useState([])
     const initiator = async()=>{
         setIsLoading(true)
-        const res = await BlockFunctions.getUnresolvedAlerts()
+        console.log({wallet});
+        const res = await BlockFunctions.getUnresolvedAlerts(wallet)
         setAlerts(res)
         setIsLoading(false)
     }
     useEffect(() => {
       initiator()
-    }, [])
+    }, [wallet])
     return (
         <div className="w-full flex justify-center">
             <Card className="w-full max-w-4xl">
@@ -44,16 +46,16 @@ const UnresolvedAlerts = () => {
                             {alerts && alerts.map((alert) => (
                                 <TableRow key={alert.alertId}>
                                     <TableCell className="font-medium">
-                                        #{alert.alertId.toString()}
+                                        #{BigNoToInt(alert.alertId)}
                                     </TableCell>
                                     <TableCell className="hidden sm:table-cell">
-                                        {alert.contractId.toString()}
+                                        {BigNoToInt(alert.contractId)}
                                     </TableCell>
                                     <TableCell className="hidden lg:table-cell">
                                         {BigNoToInt(alert.reward)}
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell text-center">
-                                        {alert.votersCount.toString()}
+                                        {BigNoToInt(alert.votersCount)}
                                     </TableCell>
                                     <TableCell className="text-center">
                                         <Badge variant={alert.isHighPriority ? "destructive" : "secondary"}>

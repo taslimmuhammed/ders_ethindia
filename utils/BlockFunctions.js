@@ -24,10 +24,10 @@ export const BlockFunctions = {
         clientId: "d38b4842e9d041746be46984e4baab53", // You can get one from dashboard settings
     }),
     getContract: () => {
-        if (!ethereum) return toast.error('Please connect your wallet');
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, abi, signer);
+        // if (!ethereum) return toast.error('Please connect your wallet');
+        // const provider = new ethers.providers.Web3Provider(ethereum);
+        // const signer = provider.getSigner();
+        // const contract = new ethers.Contract(contractAddress, abi, signer);
         return contract;
     },
     getWallet : async () => {

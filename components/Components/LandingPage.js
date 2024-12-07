@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight, CheckCircle, Github, Twitter } from "lucide-react"
 import ConnectWallet from "./ConnectWallet"
 import Link from "next/link"
+import SignInButton from "./SignInButton"
 
 const LandingPage = ({address}) => {
     const features = [
@@ -32,7 +33,7 @@ const LandingPage = ({address}) => {
                         Protect smart contract with help of validators.
                     </p>
                     
-                        {address==''?<ConnectWallet/>:
+                        {/* {address==''?<ConnectWallet/>:
                         <div className="flex gap-4 justify-center">
                         <Button size="lg" className="gap-2">
                             <Link href="/alerts">
@@ -44,7 +45,8 @@ const LandingPage = ({address}) => {
                                 <Link href="/contracts">
                             Review Contracts 
                                 </Link>
-                            </Button></div>}
+                            </Button></div>} */}
+                    <SignInButton/>
                        
                     
                 </div>

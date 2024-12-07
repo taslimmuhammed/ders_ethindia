@@ -23,7 +23,7 @@ const ContractStatusMap = {
 
 
 const ContractPage = ({ params }) => {
-    const { setIsLoading } = useContext(EthersContext)
+    const { setIsLoading, wallet } = useContext(EthersContext)
     const [contract, setContract] = useState(null);
     const [alerts, setAlerts] = useState([]);
     const [validatedAlert, setValidatedAlert] = useState([]);
@@ -38,12 +38,12 @@ const ContractPage = ({ params }) => {
             console.log({ targetContract });
             setContract(targetContract);
             if (targetContract.alerts) targetContract.alerts.map(async (alert) => {
-                const data = await BlockFunctions.getAlertDataWithoutIPFS(alert)
+                const data = await BlockFunctions.getAlertDataWithoutIPFS(alert, wallet)
                 console.log(data);
                 if (data) setAlerts([data, ...alerts])
             })
             if (targetContract.resolvedAlerts) targetContract.resolvedAlerts.map(async (alert) => {
-                const data = await BlockFunctions.getAlertDataWithoutIPFS(alert)
+                const data = await BlockFunctions.getAlertDataWithoutIPFS(alert, wallet)
                 if (data) setValidatedAlert([data, ...validatedAlert])
             })
         } catch (err) {
@@ -55,7 +55,7 @@ const ContractPage = ({ params }) => {
 
     useEffect(() => {
         initiator();
-    }, [id]);
+    }, [wallet]);
 
 
     if (!contract) {

@@ -23,23 +23,23 @@ const rewardData = {
 
 export default function UserProfile() {
     const pathname = usePathname();
-    const { setIsLoading, claimReward } = useContext(EthersContext)
+    const { setIsLoading, claimReward, wallet } = useContext(EthersContext)
     const [validator, setValidator] = useState(validatorData)
     const [reward, setReward] = useState(rewardData)
     const [contracts, setContracts] = useState([])
 
     const intiator = async () => {
         setIsLoading(true)
-        const vData = await BlockFunctions.getValidatorDetails()
+        const vData = await BlockFunctions.getValidatorDetails(wallet)
         if (vData) setValidator(vData);
-        const rData = await BlockFunctions.calculateAllRewardAndRank();
-        const unClaimedList = await BlockFunctions.getUserUnClaimedList();
+        const rData = await BlockFunctions.calculateAllRewardAndRank(wallet);
+        const unClaimedList = await BlockFunctions.getUserUnClaimedList(wallet);
         setReward({
             rewards: rData.rewards,
             rank: rData.rank,
             unclaimedAlerts: unClaimedList
         })
-        const contracts = await BlockFunctions.getUserContracts();
+        const contracts = await BlockFunctions.getUserContracts(wallet);
         console.log({contracts});
         setContracts(contracts)
         setIsLoading(false)
@@ -47,7 +47,7 @@ export default function UserProfile() {
 
     useEffect(() => {
         intiator()
-    }, [])
+    }, [wallet])
 
     
     return (

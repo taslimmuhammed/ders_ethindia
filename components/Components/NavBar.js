@@ -24,12 +24,13 @@ import {
 } from "@/components/ui/sheet"
 import ConnectWallet from './ConnectWallet';
 import Link from 'next/link';
+import SignInButton from './SignInButton';
 
 const Navbar = () => {
     return (
         <nav className="border-b bg-white dark:bg-gray-950">
             <div className="container mx-auto px-4">
-                <div className="flex h-16 items-center justify-between">
+                <div className="flex h-20 items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center">
                         <span className="text-xl font-bold">DERS</span>
@@ -45,7 +46,8 @@ const Navbar = () => {
                         {/* Desktop Select */}
                         {/* <SelectProduct /> */}
 
-                        <ConnectWallet />
+                        {/* <ConnectWallet /> */}
+                        <SignInButton/>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -65,7 +67,8 @@ const Navbar = () => {
                                     <Link href="/contracts"><Button variant="ghost">Contract</Button></Link>
                                     <Link href="/register"><Button variant="ghost">Register</Button></Link>
                                     <Link href="/profile"><Button variant="ghost">Profile</Button></Link>
-                                    <ConnectWallet/>
+                                    {/* <ConnectWallet/> */}
+                                    <SignInButton/>
                                 </div>
                             </SheetContent>
                         </Sheet>

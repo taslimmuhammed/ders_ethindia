@@ -32,19 +32,21 @@ const AlertDetails = ({ params }) => {
     const [stakeAmount, setStakeAmount] = useState('');
     const [error, setError] = useState('');
     const [alertData, setAlertData] = useState(data)
-    const {setIsLoading, vote} = useContext(EthersContext)
+    const { setIsLoading, vote, wallet } = useContext(EthersContext)
     const paramData = React.use(params);
     const { id } = paramData;
     const intiator = async()=>{
         setIsLoading(true)
-        let data = await BlockFunctions.getAlertData(id);
-        console.log(data);
-        setAlertData(data)
+        let data = await BlockFunctions.getAlertData(id, wallet);
+        console.log({data});
+        if(data) setAlertData(data)
         setIsLoading(false)
     }
     useEffect(() => {
         intiator()
-    }, [])
+        console.log({wallet});
+        
+    }, [wallet])
     
     const validateStake = (amount) => {
         if (!amount || amount === '' || isNaN(amount) || parseFloat(amount) <= 0 || parseFloat(amount) < parseFloat(alertData.minStake)) {
