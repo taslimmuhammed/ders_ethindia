@@ -4,8 +4,11 @@ import { ArrowRight, CheckCircle, Github, Twitter } from "lucide-react"
 import ConnectWallet from "./ConnectWallet"
 import Link from "next/link"
 import SignInButton from "./SignInButton"
+import { useContext } from "react"
+import { EthersContext } from "@/context/EthersContext"
 
 const LandingPage = ({address}) => {
+    const {wallet} = useContext(EthersContext)
     const features = [
         {
             title: "Secure smart contracts",
@@ -33,7 +36,7 @@ const LandingPage = ({address}) => {
                         Protect smart contract with help of validators.
                     </p>
                     
-                        {/* {address==''?<ConnectWallet/>:
+                    {!wallet ? <SignInButton /> :
                         <div className="flex gap-4 justify-center">
                         <Button size="lg" className="gap-2">
                             <Link href="/alerts">
@@ -45,10 +48,7 @@ const LandingPage = ({address}) => {
                                 <Link href="/contracts">
                             Review Contracts 
                                 </Link>
-                            </Button></div>} */}
-                    <SignInButton/>
-                       
-                    
+                            </Button></div>}                       
                 </div>
             </div>
 

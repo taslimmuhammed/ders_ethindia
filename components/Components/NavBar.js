@@ -1,4 +1,5 @@
-import React from 'react';
+"use client"
+import React, {useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button"
 import {
     Select,
@@ -7,13 +8,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
 import { Menu } from "lucide-react"
 import {
     Sheet,
@@ -22,7 +16,6 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet"
-import ConnectWallet from './ConnectWallet';
 import Link from 'next/link';
 import SignInButton from './SignInButton';
 
@@ -33,7 +26,7 @@ const Navbar = () => {
                 <div className="flex h-20 items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <span className="text-xl font-bold">DERS</span>
+                        <span className="text-xl font-bold"><Link href="/">DERS</Link></span>
                     </div>
 
                     {/* Desktop Navigation */}
@@ -44,7 +37,7 @@ const Navbar = () => {
                         <Link href="/register"><Button variant="ghost">Register</Button></Link>
                         <Link href="/profile"><Button variant="ghost">Profile</Button></Link>
                         {/* Desktop Select */}
-                        {/* <SelectProduct /> */}
+                        <SelectProduct />
 
                         {/* <ConnectWallet /> */}
                         <SignInButton/>
@@ -79,21 +72,32 @@ const Navbar = () => {
     );
 };
 
-// Separated Select component for reuse
 const SelectProduct = () => {
+    const [selectedValue, setSelectedValue] = useState('BASE');
+
+    useEffect(() => {
+        const storedValue = localStorage.getItem("blockchain");
+        if (storedValue) {
+            setSelectedValue(storedValue);
+        }
+    }, []);
+
+    const handleValueChange = (newValue) => {
+        setSelectedValue(newValue);
+        localStorage.setItem("blockchain", newValue);
+    }
+
     return (
-        <Select>
+        <Select value={selectedValue} onValueChange={handleValueChange}>
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a product" />
+                <SelectValue placeholder="BASE" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="enterprise">Enterprise</SelectItem>
-                <SelectItem value="pro">Professional</SelectItem>
-                <SelectItem value="team">Team</SelectItem>
-                <SelectItem value="starter">Starter</SelectItem>
+                <SelectItem value="BASE">Base Network</SelectItem>
+                <SelectItem value="POLYGON_TESTNET_AMOY">POLYGON_TESTNET_AMOY</SelectItem>
             </SelectContent>
         </Select>
-    );
-};
+    )
+}
 
 export default Navbar;

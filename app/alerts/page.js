@@ -13,10 +13,10 @@ import { useOkto } from 'okto-sdk-react';
 
 const UnresolvedAlerts = () => {
     const {setIsLoading, wallet} = useContext(EthersContext)
+    const {getWallets, isLoggedIn} = useOkto()
     const [alerts, setAlerts] = useState([])
     const initiator = async()=>{
         setIsLoading(true)
-        console.log({wallet});
         const res = await BlockFunctions.getUnresolvedAlerts(wallet)
         setAlerts(res)
         setIsLoading(false)
@@ -46,16 +46,16 @@ const UnresolvedAlerts = () => {
                             {alerts && alerts.map((alert) => (
                                 <TableRow key={alert.alertId}>
                                     <TableCell className="font-medium">
-                                        #{BigNoToInt(alert.alertId)}
+                                        #{alert.alertId.toString()}
                                     </TableCell>
                                     <TableCell className="hidden sm:table-cell">
-                                        {BigNoToInt(alert.contractId)}
+                                        {alert.contractId.toString()}
                                     </TableCell>
                                     <TableCell className="hidden lg:table-cell">
                                         {BigNoToInt(alert.reward)}
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell text-center">
-                                        {BigNoToInt(alert.votersCount)}
+                                        {alert.votersCount.toString()}
                                     </TableCell>
                                     <TableCell className="text-center">
                                         <Badge variant={alert.isHighPriority ? "destructive" : "secondary"}>

@@ -43,7 +43,6 @@ const AlertDetails = ({ params }) => {
     }
     useEffect(() => {
         intiator()
-        console.log({wallet});
     }, [wallet])
     
     const validateStake = (amount) => {

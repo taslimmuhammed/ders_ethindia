@@ -2,9 +2,8 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigIntToDateString, BigIntToTimeDiff, BigNoToInt, getFileNameFromURL, HexToDateString } from "./convertions";
 import { toast } from "sonner";
 import { ethers } from "ethers";
-import { contractAddress } from "./config";
+import { baseAddress, contractAddress } from "./config";
 import { abi } from "./abi";
-import { useOkto } from "okto-sdk-react";
 
 const AlertStatus = {
     0: 'Pending',
@@ -25,9 +24,15 @@ export const BlockFunctions = {
         clientId: "d38b4842e9d041746be46984e4baab53", // You can get one from dashboard settings
     }),
     getContract: () => {
-        const provider = new ethers.providers.JsonRpcProvider('https://polygon-amoy.g.alchemy.com/v2/QEgC4Vsyb3fgPm90ENKlwx5X1-edSRT8');
-        const contract = new ethers.Contract(contractAddress, abi, provider);
+        if (localStorage.getItem("blockchain")=="BASE"){
+        const provider = new ethers.providers.JsonRpcProvider("https://base-mainnet.g.alchemy.com/v2/QEgC4Vsyb3fgPm90ENKlwx5X1-edSRT8")
+        const contract = new ethers.Contract(baseAddress, abi, provider);
         return contract;
+    }else{
+            const provider = new ethers.providers.JsonRpcProvider('https://polygon-amoy.g.alchemy.com/v2/QEgC4Vsyb3fgPm90ENKlwx5X1-edSRT8');
+            const contract = new ethers.Contract(contractAddress, abi, provider);
+            return contract;
+    }
     },
     getMetaMaskError: (error) => {
         return ". reason:- " + error?.error?.data?.message || error?.data?.message || error.message || ""
@@ -129,7 +134,6 @@ export const BlockFunctions = {
     getAlertData: async (id, wallet) => {
         try {
             console.log({id, wallet});
-            
             const contract = BlockFunctions.getContract()
             const alert = await contract.getAlertDetails(id, wallet);
             let ipfsData = await BlockFunctions.storage.downloadJSON(alert.uri);
@@ -151,7 +155,7 @@ export const BlockFunctions = {
                 files
             };
         } catch (error) {
-            console.log('Error getting unresolved alerts:', error);
+            console.log('Error getting alert data:', error);
             toast.error(" Error getting data")
         }
     },

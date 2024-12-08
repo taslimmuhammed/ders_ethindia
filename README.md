@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Decentralized Emergency Response System (DERS) 🛡️
+A robust, decentralized security system for smart contract protection through community-driven validation and AI-enhanced monitoring.
+🌟 Deployed Contracts (BNB Testnet)
+DERS Contract: 0x15aee8b62699536b34f225937875216b87be839f
 
-## Getting Started
+🌟 Deployed Contracts (Amoy Testnet)
+DERS Contract: 0x37fE749Cd8823e6d24a0995a66A53e6d9e12D9BD
 
-First, run the development server:
+🎯 Problem Statement
+In the DeFi ecosystem, smart contract vulnerabilities and attacks can lead to significant losses within minutes. Traditional monitoring systems often take hours to detect and respond to threats, leaving protocols vulnerable to exploits like price manipulation, flash loan attacks, and other malicious activities.
+💡 Solution
+DERS combines AI-powered monitoring with a decentralized validator network to provide:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Real-time threat detection
+Rapid community validation
+Quick emergency response mechanisms
+Economic incentives for security participation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+⚙️ Key Features
+🔐 Contract Registration
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Register smart contracts for protection
+Set custom security parameters
+Define reward structures
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+👥 Validator Network
 
-## Learn More
+Stake-based participation
+Rank system for reputation
+Economic incentives for accurate validation
 
-To learn more about Next.js, take a look at the following resources:
+⚡ Alert System
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Two-tier alert mechanism (normal/high priority)
+Stake-weighted voting
+Consensus-based validation
+AI-enhanced detection
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+💰 Reward Structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+20% reward for alert creators
+80% distributed among supporting validators
+Rank adjustments based on performance
+Penalty system for false alerts
